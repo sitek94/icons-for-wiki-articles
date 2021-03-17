@@ -20,7 +20,13 @@ function App() {
     )
       .then(res => res.json())
       .then(json => {
-        setPages(Object.values(json.query.pages));
+        // Get only `label` and `description` from fetched pages
+        const fetchedPages = Object.values(json.query.pages).map(page => ({
+          label: page.terms.label[0],
+          description: page.terms.description?.[0] || '',
+        }));
+
+        setPages(fetchedPages);
       })
       .catch(console.log);
   }, []);
