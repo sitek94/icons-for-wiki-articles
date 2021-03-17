@@ -10,6 +10,14 @@ const ICONS = {
   village: '🌻',
   residence: '🏠',
   castle: '🏰',
+  park: '🌳',
+  synagogue: '🕍',
+  power: '⚡',
+  cemetery: '⚰️',
+  metro: '🚇',
+  university: '🎓',
+  architectural: '🏛️',
+  railway: '🚂',
 };
 
 const WARSAW_COORDS = [52.247744131869645, 21.015043804607192];
