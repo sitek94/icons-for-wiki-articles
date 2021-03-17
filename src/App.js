@@ -12,7 +12,10 @@ const ICONS = {
   castle: '🏰',
 };
 
+const WARSAW_COORDS = [52.247744131869645, 21.015043804607192];
+
 function App() {
+  const [coords, setCoords] = React.useState(WARSAW_COORDS);
   const [pages, setPages] = React.useState([]);
 
   React.useEffect(() => {
@@ -26,13 +29,13 @@ function App() {
           generator: 'geosearch',
 
           // Arbitrary coordinates in Warsaw
-          ggscoord: [52.247744131869645, 21.015043804607192].join('|'),
+          ggscoord: coords.join('|'),
           ggsradius: 2000,
         }),
     )
       .then(res => res.json())
       .then(json => {
-        const fetchedPages = Object.values(json.query.pages);
+        const fetchedPages = Object.values(json.query?.pages || []);
 
         // Extract only needed data
         const parsedPages = fetchedPages.map(page => ({
@@ -68,11 +71,12 @@ function App() {
         setPages(parsedPages);
       })
       .catch(console.log);
-  }, []);
+  }, [coords]);
 
   return (
     <div className="App">
       <h1>Icons For Wiki Articles</h1>
+      <button onClick={() => setCoords(getRandomCoords())}>Random</button>
       <ul>
         {pages.map(({ id, label, keyword }) => (
           <li key={id}>
@@ -102,6 +106,20 @@ function findKeyword(string) {
     }
   }
   return null;
+}
+
+/**
+ * It returns random coordinates close to Warsaw's city centre
+ */
+function getRandomCoords() {
+  return [
+    getRandomNumberBetween(52.156111, 52.24903),
+    getRandomNumberBetween(21.004021, 21.105173),
+  ];
+}
+
+function getRandomNumberBetween(min, max) {
+  return Math.random() * (max - min) + min;
 }
 
 export default App;
