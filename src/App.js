@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 function App() {
+  const [pages, setPages] = React.useState([]);
+
   React.useEffect(() => {
     const latitude = 52.704738803614504;
     const longitude = 21.093060254318413;
@@ -18,13 +20,16 @@ function App() {
         }),
     )
       .then(res => res.json())
-      .then(console.log)
+      .then(json => {
+        setPages(Object.values(json.query.pages));
+      })
       .catch(console.log);
   }, []);
 
   return (
     <div className="App">
       <h1>Icons For Wiki Articles</h1>
+      <pre>{JSON.stringify(pages, null, 2)}</pre>
     </div>
   );
 }
