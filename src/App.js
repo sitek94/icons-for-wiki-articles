@@ -4,9 +4,6 @@ function App() {
   const [pages, setPages] = React.useState([]);
 
   React.useEffect(() => {
-    const latitude = 52.704738803614504;
-    const longitude = 21.093060254318413;
-
     fetch(
       'https://en.wikipedia.org/w/api.php?' +
         new URLSearchParams({
@@ -15,7 +12,9 @@ function App() {
           format: 'json',
           prop: 'pageterms',
           generator: 'geosearch',
-          ggscoord: `${latitude}|${longitude}`,
+
+          // Arbitrary coordinates in Warsaw
+          ggscoord: [52.247744131869645, 21.015043804607192].join('|'),
           ggsradius: 2000,
         }),
     )
