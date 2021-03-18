@@ -1,11 +1,16 @@
 import * as React from 'react';
+import IconButton from './components/IconButton';
 
 import icons from './icons';
+import { findKeyword, getRandomCoords } from './utils';
 
-const WARSAW_COORDS = [52.247744131869645, 21.015043804607192];
+const warsawCoords = {
+  lat: 52.247744131869645,
+  lng: 21.015043804607192,
+};
 
 function App() {
-  const [coords, setCoords] = React.useState(WARSAW_COORDS);
+  const [coords, setCoords] = React.useState(warsawCoords);
   const [pages, setPages] = React.useState([]);
 
   React.useEffect(() => {
@@ -19,7 +24,7 @@ function App() {
           generator: 'geosearch',
 
           // Arbitrary coordinates in Warsaw
-          ggscoord: coords.join('|'),
+          ggscoord: coords.lat + '|' + coords.lng,
           ggsradius: 2000,
         }),
     )
@@ -64,68 +69,23 @@ function App() {
   }, [coords]);
 
   return (
-    <div className="App">
+    <>
       <h1>Icons For Wiki Articles</h1>
-      <button onClick={() => setCoords(getRandomCoords())}>Random</button>
+
+      <button onClick={() => setCoords(getRandomCoords(warsawCoords))}>
+        Get random coordinates in Warsaw
+      </button>
+
       {pages.map(({ id, label, keyword }) => (
         <div key={id} style={{ display: 'flex', alignItems: 'center' }}>
           <IconButton>{icons[keyword]}</IconButton>
           <h2>{label}</h2>
         </div>
       ))}
+
       <pre>{JSON.stringify(pages, null, 2)}</pre>
-    </div>
+    </>
   );
-}
-
-function IconButton({ children }) {
-  const [isClicked, setIsClicked] = React.useState(false);
-
-  return (
-    <button
-      onClick={() => setIsClicked(!isClicked)}
-      style={{
-        border: 'none',
-        outline: 'none',
-        background: 'none',
-        color: isClicked ? 'cornflowerblue' : 'black',
-        fontSize: 30,
-      }}
-    >
-      {children}
-    </button>
-  );
-}
-
-const availableKeywords = Object.keys(icons);
-
-/**
- * Looks for matching keyword in the given string. If the keyword is found
- * it returns it.
- */
-function findKeyword(string) {
-  for (let keyword of availableKeywords) {
-    const keywordFound = string.toLowerCase().indexOf(keyword) !== -1;
-
-    if (keywordFound) {
-      return keyword;
-    }
-  }
-  return null;
-}
-
-/**
- * It returns random coordinates close to Warsaw's city centre
- */
-function getRandomCoords() {
-  return [
-    getRandomNumberBetween(52.156111, 52.24903),
-    getRandomNumberBetween(21.004021, 21.105173),
-  ];
-}
-
-function getRandomNumberBetween(min, max) {
-  return Math.random() * (max - min) + min;
 }
 
 export default App;
