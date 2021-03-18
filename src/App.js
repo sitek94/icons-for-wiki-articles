@@ -1,24 +1,6 @@
 import * as React from 'react';
 
-const ICONS = {
-  default: '❓',
-  museum: '🖼️',
-  bridge: '🌉',
-  cathedral: '⛪',
-  church: '⛪',
-  street: '🛣️',
-  village: '🌻',
-  residence: '🏠',
-  castle: '🏰',
-  park: '🌳',
-  synagogue: '🕍',
-  power: '⚡',
-  cemetery: '⚰️',
-  metro: '🚇',
-  university: '🎓',
-  architectural: '🏛️',
-  railway: '🚂',
-};
+import icons from './icons';
 
 const WARSAW_COORDS = [52.247744131869645, 21.015043804607192];
 
@@ -85,28 +67,44 @@ function App() {
     <div className="App">
       <h1>Icons For Wiki Articles</h1>
       <button onClick={() => setCoords(getRandomCoords())}>Random</button>
-      <ul>
-        {pages.map(({ id, label, keyword }) => (
-          <li key={id}>
-            <h2>
-              {ICONS[keyword]} {label}
-            </h2>
-          </li>
-        ))}
-      </ul>
+      {pages.map(({ id, label, keyword }) => (
+        <div key={id} style={{ display: 'flex', alignItems: 'center' }}>
+          <IconButton>{icons[keyword]}</IconButton>
+          <h2>{label}</h2>
+        </div>
+      ))}
       <pre>{JSON.stringify(pages, null, 2)}</pre>
     </div>
   );
 }
 
-const AVAILABLE_KEYWORDS = Object.keys(ICONS);
+function IconButton({ children }) {
+  const [isClicked, setIsClicked] = React.useState(false);
+
+  return (
+    <button
+      onClick={() => setIsClicked(!isClicked)}
+      style={{
+        border: 'none',
+        outline: 'none',
+        background: 'none',
+        color: isClicked ? 'cornflowerblue' : 'black',
+        fontSize: 30,
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+const availableKeywords = Object.keys(icons);
 
 /**
  * Looks for matching keyword in the given string. If the keyword is found
  * it returns it.
  */
 function findKeyword(string) {
-  for (let keyword of AVAILABLE_KEYWORDS) {
+  for (let keyword of availableKeywords) {
     const keywordFound = string.toLowerCase().indexOf(keyword) !== -1;
 
     if (keywordFound) {
